@@ -23,20 +23,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost/CRUD",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
-  (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("Connected to MongoDB");
-    }
-  }
-);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
