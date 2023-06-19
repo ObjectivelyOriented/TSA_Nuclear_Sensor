@@ -11,19 +11,27 @@ $(document).ready(() => {
         this.deviceId = deviceId;
         this.maxLen = 50;
         this.timeData = new Array(this.maxLen);
-        this.temperatureData = new Array(this.maxLen);
-        this.humidityData = new Array(this.maxLen);
+        this.batteryData = new Array(this.maxLen);
+        this.cpmData = new Array(this.maxLen);
+        this.sievertsData = new Array(this.maxLen);
+        this.dangerLevelData = new Array(this.maxLen);
       }
   
-      addData(time, temperature, humidity) {
+      addData(time, battery, cpm, sieverts, dangerLevel) {
         this.timeData.push(time);
-        this.temperatureData.push(temperature);
-        this.humidityData.push(humidity || null);
+        this.batteryData.push(battery || null);
+        this.cpmData.push(cpm);
+        this.sievertsData.push(sieverts);
+        this.dangerLevelData.push(dangerLevel);
+
   
         if (this.timeData.length > this.maxLen) {
           this.timeData.shift();
-          this.temperatureData.shift();
-          this.humidityData.shift();
+          this.batteryData.shift();
+          this.cpmData.shift();
+          this.sievertsData.shift();
+          this.dangerLevelData.shift();
+          
         }
       }
     }
@@ -57,24 +65,13 @@ $(document).ready(() => {
       datasets: [
         {
           fill: false,
-          label: 'Temperature',
+          label: 'sieverts',
           yAxisID: 'Temperature',
           borderColor: 'rgba(255, 204, 0, 1)',
           pointBoarderColor: 'rgba(255, 204, 0, 1)',
           backgroundColor: 'rgba(255, 204, 0, 0.4)',
           pointHoverBackgroundColor: 'rgba(255, 204, 0, 1)',
           pointHoverBorderColor: 'rgba(255, 204, 0, 1)',
-          spanGaps: true,
-        },
-        {
-          fill: false,
-          label: 'Humidity',
-          yAxisID: 'Humidity',
-          borderColor: 'rgba(24, 120, 240, 1)',
-          pointBoarderColor: 'rgba(24, 120, 240, 1)',
-          backgroundColor: 'rgba(24, 120, 240, 0.4)',
-          pointHoverBackgroundColor: 'rgba(24, 120, 240, 1)',
-          pointHoverBorderColor: 'rgba(24, 120, 240, 1)',
           spanGaps: true,
         }
       ]
@@ -83,32 +80,13 @@ $(document).ready(() => {
     const chartOptions = {
       scales: {
         yAxes: [{
-          id: 'Temperature',
+          id: 'sieverts',
           type: 'linear',
           scaleLabel: {
-            labelString: 'Temperature (ºC)',
+            labelString: 'sieverts (mSv/hr)',
             display: true,
           },
-          position: 'left',
-          ticks: {
-            suggestedMin: 0,
-            suggestedMax: 100,
-            beginAtZero: true
-          }
-        },
-        {
-          id: 'Humidity',
-          type: 'linear',
-          scaleLabel: {
-            labelString: 'Humidity (%)',
-            display: true,
-          },
-          position: 'right',
-          ticks: {
-            suggestedMin: 0,
-            suggestedMax: 100,
-            beginAtZero: true
-          }
+          position: 'left'
         }]
       }
     };
@@ -131,8 +109,7 @@ $(document).ready(() => {
     function OnSelectionChange() {
       const device = trackedDevices.findDevice(listOfDevices[listOfDevices.selectedIndex].text);
       chartData.labels = device.timeData;
-      chartData.datasets[0].data = device.temperatureData;
-      chartData.datasets[1].data = device.humidityData;
+      chartData.datasets[0].data = device.sievertsData;
       myLineChart.update();
     }
     listOfDevices.addEventListener('change', OnSelectionChange, false);
@@ -149,7 +126,7 @@ $(document).ready(() => {
         console.log(messageData);
   
         // time and either temperature or humidity are required
-        if (!messageData.MessageDate || (!messageData.IotData.temperature && !messageData.IotData.humidity)) {
+        if (!messageData.MessageDate || (!messageData.IotData.sieverts && !messageData.IotData.CPM)) {
           return;
         }
   
@@ -157,13 +134,13 @@ $(document).ready(() => {
         const existingDeviceData = trackedDevices.findDevice(messageData.DeviceId);
   
         if (existingDeviceData) {
-          existingDeviceData.addData(messageData.MessageDate, messageData.IotData.temperature, messageData.IotData.humidity);
+          existingDeviceData.addData(messageData.MessageDate, messageData.IotData.Battery, messageData.IotData.CPM);
         } else {
           const newDeviceData = new DeviceData(messageData.DeviceId);
           trackedDevices.devices.push(newDeviceData);
           const numDevices = trackedDevices.getDevicesCount();
           deviceCount.innerText = numDevices === 1 ? `${numDevices} device` : `${numDevices} devices`;
-          newDeviceData.addData(messageData.MessageDate, messageData.IotData.temperature, messageData.IotData.humidity);
+          newDeviceData.addData(messageData.MessageDate, messageData.IotData.Battery, messageData.IotData.CPM, messageData.IotData.sieverts, messageData.IotData.danger_level);
   
           // add device to the UI list
           const node = document.createElement('option');
