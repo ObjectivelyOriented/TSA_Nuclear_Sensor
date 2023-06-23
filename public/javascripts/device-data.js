@@ -9,7 +9,7 @@ $(document).ready(() => {
     class DeviceData {
       constructor(deviceId) {
         this.deviceId = deviceId;
-        this.maxLen = 50;
+        this.maxLen = 60;
         this.timeData = new Array(this.maxLen);
         this.batteryData = new Array(this.maxLen);
         this.cpmData = new Array(this.maxLen);
@@ -66,7 +66,7 @@ $(document).ready(() => {
         {
           fill: false,
           label: 'sieverts',
-          yAxisID: 'Temperature',
+          yAxisID: 'sieverts',
           borderColor: 'rgba(255, 204, 0, 1)',
           pointBoarderColor: 'rgba(255, 204, 0, 1)',
           backgroundColor: 'rgba(255, 204, 0, 0.4)',
@@ -86,8 +86,12 @@ $(document).ready(() => {
             labelString: 'sieverts (mSv/hr)',
             display: true,
           },
-          position: 'left'
-        }]
+        position: 'left',
+        ticks: {
+          beginAtZero: true
+        }
+        }
+      ]
       }
     };
   
@@ -106,6 +110,11 @@ $(document).ready(() => {
     let needsAutoSelect = true;
     const deviceCount = document.getElementById('deviceCount');
     const listOfDevices = document.getElementById('listOfDevices');
+    const batteryLevel = document.getElementById('battery');
+    const date = document.getElementById('date');
+    const sieverts = document.getElementById('sieverts');
+    const dangerLevel = document.getElementById('dangerLevel');
+    const cpm = document.getElementById('CPM');
     function OnSelectionChange() {
       const device = trackedDevices.findDevice(listOfDevices[listOfDevices.selectedIndex].text);
       chartData.labels = device.timeData;
@@ -123,7 +132,6 @@ $(document).ready(() => {
     webSocket.onmessage = function onMessage(message) {
       try {
         const messageData = JSON.parse(message.data);
-        console.log(messageData);
   
         // time and either temperature or humidity are required
         if (!messageData.MessageDate || (!messageData.IotData.sieverts && !messageData.IotData.CPM)) {
@@ -134,19 +142,36 @@ $(document).ready(() => {
         const existingDeviceData = trackedDevices.findDevice(messageData.DeviceId);
   
         if (existingDeviceData) {
-          existingDeviceData.addData(messageData.MessageDate, messageData.IotData.Battery, messageData.IotData.CPM);
+          var messageDate = new Date(messageData.MessageDate).toLocaleString();
+          existingDeviceData.addData(messageDate, messageData.IotData.Battery, messageData.IotData.CPM, messageData.IotData.sieverts, messageData.IotData.danger_level);
+          
+          batteryLevel.innerText = "Battery: " + messageData.IotData.Battery + "%";
+          date.innerText = "Last date point date: " + messageDate;
+          sieverts.innerText = messageData.IotData.sieverts + " uSv/hr";
+          dangerLevel.innerText = "Danger Level: " + messageData.IotData.danger_level;
+          cpm.innerText = "Counts per Minute: " + messageData.IotData.CPM;
         } else {
           const newDeviceData = new DeviceData(messageData.DeviceId);
+          var messageDate = new Date(messageData.MessageDate).toLocaleString();
           trackedDevices.devices.push(newDeviceData);
           const numDevices = trackedDevices.getDevicesCount();
           deviceCount.innerText = numDevices === 1 ? `${numDevices} device` : `${numDevices} devices`;
-          newDeviceData.addData(messageData.MessageDate, messageData.IotData.Battery, messageData.IotData.CPM, messageData.IotData.sieverts, messageData.IotData.danger_level);
-  
+          newDeviceData.addData(messageDate, messageData.IotData.Battery, messageData.IotData.CPM, messageData.IotData.sieverts, messageData.IotData.danger_level);
+          console.log(messageData.sievertsData);
+          
+          batteryLevel.innerText = "Battery: " + messageData.IotData.Battery + "%";
+          date.innerText = "Last date point date: " + messageDate;
+          sieverts.innerText = messageData.IotData.sieverts + " uSv/hr";
+          dangerLevel.innerText = "Danger Level: " + messageData.IotData.danger_level;
+          cpm.innerText = "Counts per Minute: " + messageData.IotData.CPM;
+
           // add device to the UI list
           const node = document.createElement('option');
           const nodeText = document.createTextNode(messageData.DeviceId);
           node.appendChild(nodeText);
           listOfDevices.appendChild(node);
+
+          
   
           // if this is the first device being discovered, auto-select it
           if (needsAutoSelect) {
@@ -155,10 +180,17 @@ $(document).ready(() => {
             OnSelectionChange();
           }
         }
-  
+        
+        
+
         myLineChart.update();
       } catch (err) {
-        console.error(err);
+        console.log(err);
+       
+        
       }
     };
+   
+    
+    
   });

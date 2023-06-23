@@ -1,0 +1,35 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="javascripts/device-data.js" type="text/javascript" charset="utf-8"></script>
+
+
+</head>
+
+<body>
+    <h1 class="flexHeader">
+        <span>
+            <span id="deviceCount">0 devices</span>
+            <select id="listOfDevices" class="select_box"></select>
+            
+        </span>
+        <span>Sievert level data</span>
+    </h1>
+    <p id = "battery">Battery: undefined</p>
+    <p id = "date">Last date point date: undefined</p>
+    <p id = "sieverts">undefined uSv/hr</p>
+    <p id = "dangerLevel">Danger Level: undefined </p>
+    <p id = "CPM">Counts per Minute: undefined </p>
+    <div>
+        <canvas id="iotChart"></canvas>
+    </div>
+</body>
+
+</html>

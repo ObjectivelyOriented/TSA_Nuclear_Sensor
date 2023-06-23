@@ -1,0 +1,8 @@
+{
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  "python.formatting.provider": "none",
+  "appService.defaultWebAppToDeploy": "/subscriptions/0c62632f-ca37-40ec-bd64-b21a3e4f2fe2/resourceGroups/Ziononwujuba233_rg_4872/providers/Microsoft.Web/sites/tsanuclearsensorwebapp/configuration/subscriptions/0c62632f-ca37-40ec-bd64-b21a3e4f2fe2/resourceGroups/Ziononwujuba233_rg_4872/providers/Microsoft.Web/sites/tsanationalswebapp",
+  "appService.deploySubpath": "."
+}

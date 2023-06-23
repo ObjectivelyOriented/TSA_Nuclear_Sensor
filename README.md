@@ -5,13 +5,12 @@ To deploy code to azure (first run), run: /home/ziono/bin/az webapp up --sku F1 
 To deploy code to azure: /home/ziono/bin/az webapp up
 Azure url (use after code is deployed): http://tsanuclearsensorapp.azurewebsites.net
 IoT hub name: TSANucSensorIoTHub
-connection string:
-{
-"connectionString": "HostName=TSANucSensorIoTHub.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=sJFV50GfD2EB59PeavH6d3eTG1UMayRQZ1xnndbIcQ8="
-}
+Using IoT Hub connection string [HostName=TSANucSensorIoTHub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=cRG1ggRmULriOoL43BkYgO5wSFyaNHRZ61F/3gxsUfg=]
+TSAConsumerName
+Using event hub consumer group [TSAConsumerName]
 
 IoT Resource name: Ziononwujuba233_rg_4872
-IoT consumer group: TSAConsumerName
+The partition ids are: [ '0', '1', '2', '3' ]
 
 IoT hub creation json:
 {
