@@ -58,14 +58,12 @@ wss.broadcast = (data) => {
       } catch (e) {
         console.error(e);
       }
-    } if (client.readyState === WebSocket.CONNECTING){
-      console.log(`Dead`);
-    }
+    } 
   
   });
 };
 
-server.listen(process.env.PORT || '80', () => {
+server.listen(process.env.PORT || '3000', () => {
   console.log('Listening on %d.', server.address().port);
 });
 const eventHubReader = new EventHubReader(iotHubConnectionString, eventHubConsumerGroup);
