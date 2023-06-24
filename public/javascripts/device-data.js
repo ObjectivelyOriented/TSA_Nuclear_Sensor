@@ -86,7 +86,7 @@ $(document).ready(() => {
             labelString: 'sieverts (mSv/hr)',
             display: true,
           },
-        position: 'left',
+        position: 'right',
         ticks: {
           beginAtZero: true
         }
