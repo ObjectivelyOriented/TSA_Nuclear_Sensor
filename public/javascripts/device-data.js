@@ -146,7 +146,7 @@ $(document).ready(() => {
           existingDeviceData.addData(messageDate, messageData.IotData.Battery, messageData.IotData.CPM, messageData.IotData.sieverts, messageData.IotData.danger_level);
           
           batteryLevel.innerText = "Battery: " + messageData.IotData.Battery + "%";
-          date.innerText = "Last date point date: " + messageDate;
+          date.innerText = "Last data point date: " + messageDate;
           sieverts.innerText = messageData.IotData.sieverts + " uSv/hr";
           dangerLevel.innerText = "Danger Level: " + messageData.IotData.danger_level;
           cpm.innerText = "Counts per Minute: " + messageData.IotData.CPM;
@@ -160,7 +160,7 @@ $(document).ready(() => {
           console.log(messageData.sievertsData);
           
           batteryLevel.innerText = "Battery: " + messageData.IotData.Battery + "%";
-          date.innerText = "Last date point date: " + messageDate;
+          date.innerText = "Last data point date: " + messageDate;
           sieverts.innerText = messageData.IotData.sieverts + " uSv/hr";
           dangerLevel.innerText = "Danger Level: " + messageData.IotData.danger_level;
           cpm.innerText = "Counts per Minute: " + messageData.IotData.CPM;

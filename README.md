@@ -6,6 +6,7 @@ To deploy code to azure: /home/ziono/bin/az webapp up
 Azure url (use after code is deployed): http://tsanuclearsensorapp.azurewebsites.net
 IoT hub name: TSANucSensorIoTHub
 Using IoT Hub connection string [HostName=TSANucSensorIoTHub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=cRG1ggRmULriOoL43BkYgO5wSFyaNHRZ61F/3gxsUfg=]
+
 TSAConsumerName
 Using event hub consumer group [TSAConsumerName]
 
