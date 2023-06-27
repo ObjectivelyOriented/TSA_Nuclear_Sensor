@@ -4,22 +4,21 @@ $(document).ready(() => {
     // if deployed to a site supporting SSL, use wss://
     const protocol = document.location.protocol.startsWith('https') ? 'wss://' : 'ws://';
     const webSocket = new WebSocket(protocol + location.host);
+    
   
     // A class for holding the last N points of telemetry for a device
     class DeviceData {
       constructor(deviceId) {
         this.deviceId = deviceId;
-        this.maxLen = 60;
+        this.maxLen = 9;
         this.timeData = new Array(this.maxLen);
-        this.batteryData = new Array(this.maxLen);
         this.cpmData = new Array(this.maxLen);
         this.sievertsData = new Array(this.maxLen);
         this.dangerLevelData = new Array(this.maxLen);
       }
   
-      addData(time, battery, cpm, sieverts, dangerLevel) {
+      addData(time, cpm, sieverts, dangerLevel) {
         this.timeData.push(time);
-        this.batteryData.push(battery || null);
         this.cpmData.push(cpm);
         this.sievertsData.push(sieverts);
         this.dangerLevelData.push(dangerLevel);
@@ -27,7 +26,6 @@ $(document).ready(() => {
   
         if (this.timeData.length > this.maxLen) {
           this.timeData.shift();
-          this.batteryData.shift();
           this.cpmData.shift();
           this.sievertsData.shift();
           this.dangerLevelData.shift();
@@ -67,31 +65,58 @@ $(document).ready(() => {
           fill: false,
           label: 'sieverts',
           yAxisID: 'sieverts',
-          borderColor: 'rgba(255, 204, 0, 1)',
-          pointBoarderColor: 'rgba(255, 204, 0, 1)',
-          backgroundColor: 'rgba(255, 204, 0, 0.4)',
-          pointHoverBackgroundColor: 'rgba(255, 204, 0, 1)',
-          pointHoverBorderColor: 'rgba(255, 204, 0, 1)',
+          xAxisID: 'timeStamp',
+          borderColor: '#e86a33', // line color
+          backgroundColor: '#ff844e', //point color
+          pointHoverBackgroundColor: '#ff844e',
+          pointHoverBorderColor: '#e86a33',
           spanGaps: true,
         }
       ]
     };
   
     const chartOptions = {
+    plugins:{
+      title: {
+        text: 'Sieverts',
+        display: true,
+        font: {
+          family: 'Comic Sans MS',
+          size: 24,
+          weight: 'bold',
+          lineHeight: 1.2,
+
+        color: "#41644A"
+        },
+    },
+    customCanvasBackgroundColor: {
+      color: '#F2E3DB',
+    },
+    },
+       
+    
       scales: {
-        yAxes: [{
+        sieverts: {
           id: 'sieverts',
           type: 'linear',
-          scaleLabel: {
-            labelString: 'sieverts (mSv/hr)',
+          title: {
+            text: 'sieverts (mSv/hr)',
             display: true,
           },
+          
+        },
+        timeStamp: {
+            id: 'timestamps',
+            title: {
+              text: 'Time Stamps',
+              display: true,
+            },
+           
+        },
+        
+      responsive: true,
         position: 'right',
-        ticks: {
-          beginAtZero: true
-        }
-        }
-      ]
+      
       }
     };
   
@@ -110,8 +135,7 @@ $(document).ready(() => {
     let needsAutoSelect = true;
     const deviceCount = document.getElementById('deviceCount');
     const listOfDevices = document.getElementById('listOfDevices');
-    const batteryLevel = document.getElementById('battery');
-    const date = document.getElementById('date');
+    const deviceLocation = document.getElementById('location');
     const sieverts = document.getElementById('sieverts');
     const dangerLevel = document.getElementById('dangerLevel');
     const cpm = document.getElementById('CPM');
@@ -137,33 +161,30 @@ $(document).ready(() => {
         if (!messageData.MessageDate || (!messageData.IotData.sieverts && !messageData.IotData.CPM)) {
           return;
         }
-  
+        const device_location = messageData.IotData.location; 
+        var messageDate = new Date(messageData.MessageDate);
+        dangerLevel.style.color = dangerLevelColor(messageData.IotData.danger_level);
         // find or add device to list of tracked devices
         const existingDeviceData = trackedDevices.findDevice(messageData.DeviceId);
   
         if (existingDeviceData) {
-          var messageDate = new Date(messageData.MessageDate).toLocaleString();
-          existingDeviceData.addData(messageDate, messageData.IotData.Battery, messageData.IotData.CPM, messageData.IotData.sieverts, messageData.IotData.danger_level);
           
-          batteryLevel.innerText = "Battery: " + messageData.IotData.Battery + "%";
-          date.innerText = "Last data point date: " + messageDate;
-          sieverts.innerText = messageData.IotData.sieverts + " uSv/hr";
-          dangerLevel.innerText = "Danger Level: " + messageData.IotData.danger_level;
+          deviceLocation.innerText = "Location: " + device_location;
+          sieverts.innerText = "Sievert level: " + messageData.IotData.sieverts + " uSv/hr";
+          
+          dangerLevel.innerText = messageData.IotData.danger_level;
           cpm.innerText = "Counts per Minute: " + messageData.IotData.CPM;
+          existingDeviceData.addData(timeString(messageDate), messageData.IotData.CPM, messageData.IotData.sieverts, messageData.IotData.danger_level);
         } else {
           const newDeviceData = new DeviceData(messageData.DeviceId);
-          var messageDate = new Date(messageData.MessageDate).toLocaleString();
+         
           trackedDevices.devices.push(newDeviceData);
-          const numDevices = trackedDevices.getDevicesCount();
-          deviceCount.innerText = numDevices === 1 ? `${numDevices} device` : `${numDevices} devices`;
-          newDeviceData.addData(messageDate, messageData.IotData.Battery, messageData.IotData.CPM, messageData.IotData.sieverts, messageData.IotData.danger_level);
-          console.log(messageData.sievertsData);
           
-          batteryLevel.innerText = "Battery: " + messageData.IotData.Battery + "%";
-          date.innerText = "Last data point date: " + messageDate;
-          sieverts.innerText = messageData.IotData.sieverts + " uSv/hr";
-          dangerLevel.innerText = "Danger Level: " + messageData.IotData.danger_level;
+          deviceLocation.innerText = "Location: " + device_location;
+          sieverts.innerText = "Sievert level: " + messageData.IotData.sieverts + " uSv/hr";
+          dangerLevel.innerText = messageData.IotData.danger_level;
           cpm.innerText = "Counts per Minute: " + messageData.IotData.CPM;
+          newDeviceData.addData(timeString(messageDate), messageData.IotData.CPM, messageData.IotData.sieverts, messageData.IotData.danger_level);
 
           // add device to the UI list
           const node = document.createElement('option');
@@ -194,3 +215,28 @@ $(document).ready(() => {
     
     
   });
+  function timeString(date){
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let time = date.toLocaleTimeString();
+
+    return time + ", " + month + "/" + day
+  }
+  function dangerLevelColor(danger_level){
+    
+    switch (danger_level) {
+      case "LOW":
+        text_color = "green";
+        return text_color;
+      case "MED":
+        text_color = "yellow";
+        return text_color;
+      case "HIGH":
+        text_color = "red";
+        return text_color;
+      default:
+        text_color = "black";
+        return text_color;
+    }
+    
+  }
