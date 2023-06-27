@@ -10,7 +10,7 @@ $(document).ready(() => {
     class DeviceData {
       constructor(deviceId) {
         this.deviceId = deviceId;
-        this.maxLen = 9;
+        this.maxLen = 6;
         this.timeData = new Array(this.maxLen);
         this.cpmData = new Array(this.maxLen);
         this.sievertsData = new Array(this.maxLen);
@@ -66,10 +66,10 @@ $(document).ready(() => {
           label: 'sieverts',
           yAxisID: 'sieverts',
           xAxisID: 'timeStamp',
-          borderColor: '#e86a33', // line color
-          backgroundColor: '#ff844e', //point color
-          pointHoverBackgroundColor: '#ff844e',
-          pointHoverBorderColor: '#e86a33',
+          borderColor: '#1C315E', // line color
+          backgroundColor: '#227C70', //point color
+          pointHoverBackgroundColor: '#1C315E',
+          pointHoverBorderColor: '#227C70',
           spanGaps: true,
         }
       ]
@@ -169,21 +169,21 @@ $(document).ready(() => {
   
         if (existingDeviceData) {
           
-          deviceLocation.innerText = "Location: " + device_location;
-          sieverts.innerText = "Sievert level: " + messageData.IotData.sieverts + " uSv/hr";
+          deviceLocation.innerText = device_location;
+          sieverts.innerText = messageData.IotData.sieverts + " uSv/hr";
           
           dangerLevel.innerText = messageData.IotData.danger_level;
-          cpm.innerText = "Counts per Minute: " + messageData.IotData.CPM;
+          cpm.innerText = messageData.IotData.CPM;
           existingDeviceData.addData(timeString(messageDate), messageData.IotData.CPM, messageData.IotData.sieverts, messageData.IotData.danger_level);
         } else {
           const newDeviceData = new DeviceData(messageData.DeviceId);
          
           trackedDevices.devices.push(newDeviceData);
           
-          deviceLocation.innerText = "Location: " + device_location;
-          sieverts.innerText = "Sievert level: " + messageData.IotData.sieverts + " uSv/hr";
+          deviceLocation.innerText = device_location;
+          sieverts.innerText = messageData.IotData.sieverts + " uSv/hr";
           dangerLevel.innerText = messageData.IotData.danger_level;
-          cpm.innerText = "Counts per Minute: " + messageData.IotData.CPM;
+          cpm.innerText = messageData.IotData.CPM;
           newDeviceData.addData(timeString(messageDate), messageData.IotData.CPM, messageData.IotData.sieverts, messageData.IotData.danger_level);
 
           // add device to the UI list
