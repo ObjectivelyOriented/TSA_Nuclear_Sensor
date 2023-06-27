@@ -169,7 +169,7 @@ $(document).ready(() => {
   
         if (existingDeviceData) {
           
-          deviceLocation.innerText = device_location;
+          deviceLocation.innerText = "Location: " + device_location;
           sieverts.innerText = messageData.IotData.sieverts + " uSv/hr";
           
           dangerLevel.innerText = messageData.IotData.danger_level;
@@ -180,7 +180,7 @@ $(document).ready(() => {
          
           trackedDevices.devices.push(newDeviceData);
           
-          deviceLocation.innerText = device_location;
+          deviceLocation.innerText = "Location: " + device_location;
           sieverts.innerText = messageData.IotData.sieverts + " uSv/hr";
           dangerLevel.innerText = messageData.IotData.danger_level;
           cpm.innerText = messageData.IotData.CPM;
