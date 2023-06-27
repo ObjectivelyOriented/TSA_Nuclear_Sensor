@@ -1,20 +1,96 @@
+@font-face {
+  font-family: Poppins-ExtraBold;
+  src: url('poppinsbold.ttf');
+}
+@font-face {
+  font-family: Poppins-Regular;
+  src: url('poppinsreg.ttf');
+}
 body {
   margin: 0;
+  background-color: #E6E2C3;
+  text-size-adjust: 50%;
   
+  
+}
+footer {
+  background-color: #227C70;
+  text-align: center;
+  font-family: Poppins-ExtraBold;
+  font-size: 1em;
+  padding:5px;
+  color: #E6E2C3;
 }
 
 .header {
-  padding: 30px;
+  padding: 2px;
   text-align: left;
-  background: #1abc9c;
-  color: white;
-  font-size: 30px;
-}
-.subheader{
-  padding: 30px;
-  text-align: left;
-  background: #1abc9c;
-  color: white;
-  font-size: 30px;
+  background: #227C70;
+  font-family: Poppins-ExtraBold;
+  font-size: 2em;
+  color: #E6E2C3;
 }
 
+.subheader{
+  padding: 20px;
+  text-align: left;
+  background: #227C70;
+  font-family: Poppins-Regular;
+  font-size: 1.5em;
+  color: #E6E2C3;
+}
+
+select{
+  font-family: Poppins-Regular;
+  height:3vh;
+  border-color: #1C315E;
+}
+
+.outer-container{
+  display:flex;
+  flex-direction: row;
+  font-family: Poppins-Regular;
+}
+
+.info-outer-container{
+  display:flex;
+  flex-direction: column;
+  text-align: center;
+  text-size-adjust: 50%;
+  width: 30%; /* Can be in percentage also. */
+    height: auto;
+    margin: 0 auto;
+  padding:2%;
+  
+}
+
+.info-outer-container span{
+  color: #E6E2C3;
+}
+
+.chart-container{
+  position: relative;
+  margin: auto;
+  height: 65vh;
+  width: 65vw;
+}
+
+.info-inner-container{
+  background-color: #88A47C;
+ 
+  padding:5px;
+  
+  font-size: 1.5vw;
+  
+}
+
+
+
+.info{
+  background-color: #E6E2C3;
+  width: 500px; /* Can be in percentage also. */
+    height: auto;
+    margin: 0 auto;
+  margin: 5%;
+  padding:2%;
+}
